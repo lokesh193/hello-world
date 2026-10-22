@@ -38,7 +38,8 @@ const TOOLS = [
   { name: "start_quiz", description: "Return one multiple-choice revision question for a supported ECE topic. Call check_quiz_answer to score a learner response.", inputSchema: { type: "object", properties: { topic: { type: "string" }, question_index: { type: "integer", minimum: 0 } }, required: ["topic"] } },
   { name: "check_quiz_answer", description: "Score one answer against the built-in study-pack quiz, explain why it is right or wrong, and report a mastery increment.", inputSchema: { type: "object", properties: { topic: { type: "string" }, question_index: { type: "integer", minimum: 0 }, answer_index: { type: "integer", minimum: 0 } }, required: ["topic", "question_index", "answer_index"] } },
   { name: "save_progress", description: "Save the learner's last topic, section and mastery with a random browser-generated anonymous key; does not store notes or personal identity.", inputSchema: { type: "object", properties: { learner_key: { type: "string" }, topic: { type: "string" }, section: { type: "string" }, mastery: { type: "integer", minimum: 0, maximum: 100 }, actions_count: { type: "integer", minimum: 0 }, correct_answers: { type: "integer", minimum: 0 }, topics_explored: { type: "array", items: { type: "string" } } }, required: ["learner_key", "topic"] } },
-  { name: "get_progress", description: "Retrieve previously saved study progress using the anonymous browser key.", inputSchema: { type: "object", properties: { learner_key: { type: "string" } }, required: ["learner_key"] } }
+  { name: "get_progress", description: "Retrieve previously saved study progress using the anonymous browser key.", inputSchema: { type: "object", properties: { learner_key: { type: "string" } }, required: ["learner_key"] } },
+  { name: "run_guided_study_cycle", description: "Compose a multi-step study workflow: search the ECE study pack, explain the selected topic, and return one quiz question. Identifies the built-in reference source and does not claim image OCR or generative synthesis of arbitrary notes.", inputSchema: { type: "object", properties: { topic: { type: "string" }, level: { type: "string", enum: ["simple", "exam", "detailed"] }, student_notes: { type: "string" }, question_index: { type: "integer", minimum: 0 } }, required: ["topic"] } }
 ];
 
 function textResult(text, structuredContent) {
@@ -60,6 +61,31 @@ function topicName(query) {
 function codeText(tool, args) {
   const topic = topicName(args.topic || args.query);
   const material = MATERIALS.find(m => m.title === topic) || MATERIALS[0];
+  if (tool === "run_guided_study_cycle") {
+    const matches = findMaterial(args.topic || topic).filter(m => m.score > 0).slice(0,3);
+    const questions = QUIZZES[topic] || QUIZZES["DSP architecture"];
+    const idx = Math.max(0, Math.min(questions.length-1, Number.isInteger(args.question_index) ? args.question_index : 0));
+    const question = questions[idx];
+    const level = args.level || "simple";
+    const notes = String(args.student_notes || "").trim().slice(0,12000);
+    let explanation = material.body;
+    if (level === "simple") explanation = "In simple terms: " + material.body;
+    if (level === "exam") explanation = "Exam-ready explanation — " + material.body + " Key points to remember: define the concept, explain the data flow, and state one practical use.";
+    if (level === "detailed") explanation = material.body + " Study check: explain the definition, flow, key operation, and one implementation limitation.";
+    const workflow = {
+      workflow: "search_explain_quiz",
+      topic: material.title,
+      source: notes ? "Built-in ECE study pack; learner notes excerpt returned separately" : "Built-in ECE study pack",
+      steps: [
+        {step:1,tool:"search_study_material",query:args.topic || topic,matches:matches.map(m=>({title:m.title,section:m.section,excerpt:m.body}))},
+        {step:2,tool:"explain_concept",topic:material.title,level,explanation},
+        {step:3,tool:"start_quiz",topic:material.title,question_index:idx,question:question.question,options:question.options}
+      ],
+      student_notes_excerpt: notes ? notes.slice(0,1000) : "",
+      notice: "The workflow uses deterministic reference content; learner notes are shown separately and are not treated as a generated synthesis."
+    };
+    return textResult(JSON.stringify(workflow,null,2),workflow);
+  }
   if (tool === "search_study_material") {
     const matches = findMaterial(args.query).filter(m => m.score > 0).slice(0,3);
     const useNotes = String(args.student_notes || "").trim().slice(0,12000);
