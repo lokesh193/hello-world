@@ -15,7 +15,8 @@ After deployment, open the public-facing StudySaathi URL shown in the project co
 - Responsive study workspace with keyboard navigation, focus indicators, skip link, live status messages, and high-contrast toggle.
 - Speech synthesis for spoken explanations and browser speech recognition where supported.
 - ECE study pack covering DSP architecture, FIR filters, Q15 representation, MAC units, and circular buffers.
-- MCP tools: `search_study_material`, `explain_concept`, `describe_diagram`, `start_quiz`, `check_quiz_answer`, `save_progress`, and `get_progress`.
+- MCP tools: `search_study_material`, `explain_concept`, `describe_diagram`, `start_quiz`, `check_quiz_answer`, `save_progress`, `get_progress`, and `run_guided_study_cycle`.
+- Guided study cycle chains search, explanation and quiz generation before saving the progress state.
 - Quiz feedback is checked against a deterministic answer key.
 - Anonymous progress storage. Full notes stay in local browser storage and are not saved by progress tools.
 - Visible trace of the MCP calls made by the web client.
@@ -94,5 +95,4 @@ MIT. See [LICENSE](LICENSE).
 
 **Primary track:** Alexa+ simulated experience.  
 **Permanent app URL:** https://studysaathi-voice.hatchable.site  
-**Live preview:** Use the latest preview URL from the project owner for short-term review; preview links expire.  
-**Before submission:** Make the hosted app public in the Hatchable project settings and rename the GitHub repository from `hello-world` to `studysaathi-voice` so the project URL is clear to reviewers.
+**Before submission:** Make the hosted app public in Hatchable project settings and rename the GitHub repository from `hello-world` to `studysaathi-voice` so the project URL is clear to reviewers.
