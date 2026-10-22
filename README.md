@@ -2,6 +2,8 @@
 
 **Accessible AI study companion for blind and low-vision college students.**
 
+**License:** [MIT](LICENSE)
+
 StudySaathi turns study into an accessible voice-first workflow: ask for a concept explanation, hear a sequential DSP diagram description, practise a question, and continue from saved progress. It is designed as a web-based Alexa+-style simulation and includes both a browser-facing Streamable HTTP JSON-RPC endpoint and native Hatchable MCP tool definitions.
 
 > **Transparency:** This is a hackathon prototype, not an Amazon product and not a native Alexa+ integration. The Alexa+ developer toolkit is not exposed to general hackathon participants, so the web experience is clearly labelled as a simulation. Diagram narration currently uses built-in templates or a learner-supplied text description; this version does not run OCR/vision on uploaded images. The deterministic ECE study pack is a limited reference source, not a full generative tutor.
