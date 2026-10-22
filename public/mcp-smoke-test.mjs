@@ -34,14 +34,16 @@ async function main() {
     await rpc("notifications/initialized");
     const listed = await rpc("tools/list");
     const names = (listed?.result?.tools || []).map(t => t.name);
-    for (const name of ["explain_concept","describe_diagram","start_quiz","check_quiz_answer","save_progress","get_progress"]) assert(names.includes(name), "Missing tool: " + name);
+    for (const name of ["explain_concept","describe_diagram","start_quiz","check_quiz_answer","save_progress","get_progress","run_guided_study_cycle"]) assert(names.includes(name), "Missing tool: " + name);
     const explanation = await rpc("tools/call", {name:"explain_concept",arguments:{topic:"MAC unit",level:"simple"}});
     assert(!explanation?.error && JSON.stringify(explanation).includes("multiply-accumulate"), "Concept explanation failed.");
     const quiz = await rpc("tools/call", {name:"start_quiz",arguments:{topic:"DSP architecture",question_index:0}});
     assert(!quiz?.error && JSON.stringify(quiz).includes("Harvard-style"), "Quiz start failed.");
     const checked = await rpc("tools/call", {name:"check_quiz_answer",arguments:{topic:"DSP architecture",question_index:0,answer_index:0}});
     assert(!checked?.error && JSON.stringify(checked).includes('"correct":true'), "Quiz answer check failed.");
-    console.log(JSON.stringify({ok:true,protocol:init.result.protocolVersion,tools:names,tests:["initialize","notifications/initialized","tools/list","explain_concept","start_quiz","check_quiz_answer"]},null,2));
+    const cycle = await rpc("tools/call", {name:"run_guided_study_cycle",arguments:{topic:"MAC unit",level:"simple",question_index:0}});
+    assert(!cycle?.error && JSON.stringify(cycle).includes('"search_explain_quiz"') && JSON.stringify(cycle).includes('"explain_concept"'), "Guided study cycle failed.");
+    console.log(JSON.stringify({ok:true,protocol:init.result.protocolVersion,tools:names,tests:["initialize","notifications/initialized","tools/list","explain_concept","start_quiz","check_quiz_answer","run_guided_study_cycle"]},null,2));
   } catch (error) {
     console.error("MCP smoke test failed:", error.message);
     process.exit(1);
