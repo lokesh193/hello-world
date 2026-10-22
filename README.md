@@ -90,6 +90,7 @@ MIT. See [LICENSE](LICENSE).
 
 - [Timed demo script (under 3 minutes)](DEMO_SCRIPT.md)
 - [Submission summary and product feedback](SUBMISSION_NOTES.md)
+- [Developer friction log and actionable feedback](FRICTION_LOG.md)
 
 **Primary track:** Alexa+ simulated experience.  
 **Permanent app URL:** https://studysaathi-voice.hatchable.site  
