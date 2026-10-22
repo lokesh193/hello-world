@@ -85,3 +85,13 @@ No npm dependencies are needed by the hosted project. The public client uses the
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Hackathon handoff
+
+- [Timed demo script (under 3 minutes)](DEMO_SCRIPT.md)
+- [Submission summary and product feedback](SUBMISSION_NOTES.md)
+
+**Primary track:** Alexa+ simulated experience.  
+**Permanent app URL:** https://studysaathi-voice.hatchable.site  
+**Live preview:** Use the latest preview URL from the project owner for short-term review; preview links expire.  
+**Before submission:** Make the hosted app public in the Hatchable project settings and rename the GitHub repository from `hello-world` to `studysaathi-voice` so the project URL is clear to reviewers.
