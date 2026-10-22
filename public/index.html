@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#122d3a">
+  <meta name="description" content="StudySaathi Voice is an accessible, voice-first study companion for blind and low-vision college students.">
+  <title>StudySaathi Voice — Learn on your terms</title>
+  <link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to study workspace</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="StudySaathi navigation">
+      <a class="brand" href="/" id="brandHome" aria-label="StudySaathi Voice home">
+        <span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 22V16a12 12 0 0 1 24 0v6"/><rect x="5" y="20" width="7" height="11" rx="3.5"/><rect x="28" y="20" width="7" height="11" rx="3.5"/><path d="M30 31c-2 4-7 5-12 5"/></svg></span>
+        <span class="brand-text"><strong>StudySaathi</strong><small>VOICE LEARNING</small></span>
+      </a>
+      <div class="side-label">YOUR WORKSPACE</div>
+      <nav class="side-nav" aria-label="Main">
+        <button class="side-link active" data-view="study" aria-current="page"><span class="nav-icon" aria-hidden="true">◉</span><span>Study session</span><span class="nav-arrow">›</span></button>
+        <button class="side-link" data-view="notes"><span class="nav-icon" aria-hidden="true">▤</span><span>My study material</span></button>
+        <button class="side-link" data-view="progress"><span class="nav-icon" aria-hidden="true">◷</span><span>Learning progress</span></button>
+        <button class="side-link" data-view="tools"><span class="nav-icon" aria-hidden="true">⌘</span><span>MCP tools</span></button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <section class="access-card">
+        <div class="access-icon" aria-hidden="true">Aa</div>
+        <strong>Built for listening</strong>
+        <p>Large targets, keyboard access, spoken answers and screen-reader-friendly content.</p>
+        <button id="highContrastToggle" class="plain-action" aria-pressed="false">Toggle high contrast <span aria-hidden="true">↗</span></button>
+      </section>
+      <div class="side-foot"><span class="online-dot"></span><span id="serverStatusText">Connecting to study tools…</span></div>
+    </aside>
+
+    <main id="main" class="main-area">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-symbol" aria-hidden="true">◖</span><strong>StudySaathi</strong></div>
+        <div class="breadcrumb"><span>Workspace</span><span aria-hidden="true">/</span><strong id="breadcrumbCurrent">Study session</strong></div>
+        <div class="top-actions">
+          <button id="readPageBtn" class="top-icon" aria-label="Read page introduction aloud" title="Read page aloud">◖))</button>
+          <button id="stopSpeechBtn" class="top-icon" aria-label="Stop speech" title="Stop speaking">■</button>
+          <span class="avatar" aria-label="Demo learner">S</span>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section id="studyView" class="view-panel">
+          <div class="welcome-row">
+            <div>
+              <p class="eyebrow">YOUR PERSONAL LEARNING SPACE</p>
+              <h1>Learn your way.<br><span>At your own pace.</span></h1>
+              <p class="subheading">A study companion that listens, explains, quizzes and remembers where you left off.</p>
+            </div>
+            <div class="today-chip"><span class="today-icon">✦</span><span><small>SESSION MODE</small><strong>Voice + visual</strong></span></div>
+          </div>
+
+          <div class="study-grid">
+            <section class="center-column">
+              <div class="panel course-panel">
+                <div class="panel-head"><div><span class="panel-kicker">CURRENT STUDY</span><h2>Pick up where you want</h2></div><span class="status-pill"><i></i> MCP connected</span></div>
+                <div class="course-controls">
+                  <label for="topicSelect" class="visually-hidden">Study topic</label>
+                  <select id="topicSelect">
+                    <option value="DSP architecture">DSP architecture</option>
+                    <option value="FIR filters">FIR filters</option>
+                    <option value="Q15 number format">Q15 number format</option>
+                    <option value="MAC unit">MAC unit</option>
+                  </select>
+                  <button id="resumeBtn" class="secondary-button">Resume last topic <span aria-hidden="true">→</span></button>
+                </div>
+                <div class="topic-progress">
+                  <div class="progress-copy"><span>Today's learning path</span><strong id="progressText">Ready when you are</strong></div>
+                  <div class="progress-track" role="progressbar" aria-label="Current topic mastery estimate" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="topicProgressBar"><span id="topicProgressFill"></span></div>
+                  <div class="path-meta"><span><i class="meta-dot mint"></i><span id="topicSection">4 short learning actions</span></span><span id="progressPercent">0% mastery estimate</span></div>
+                </div>
+              </div>
+
+              <section class="panel conversation-panel" aria-labelledby="conversationHeading">
+                <div class="panel-head conversation-head"><div><span class="panel-kicker">YOUR STUDY PARTNER</span><h2 id="conversationHeading">Let's learn together</h2></div><button id="clearChatBtn" class="text-button">New session ↗</button></div>
+                <div id="chatLog" class="chat-log" role="log" aria-live="polite" aria-relevant="additions text">
+                  <article class="message assistant-message">
+                    <div class="message-avatar" aria-hidden="true">S<span>✦</span></div>
+                    <div class="message-body">
+                      <div class="message-meta"><strong>StudySaathi</strong><span>STUDY GUIDE</span></div>
+                      <p>Namaste! I'm ready to study with you. Ask me to explain a concept, describe a diagram, quiz you, or continue your last session.</p>
+                      <p class="welcome-note">Try saying: “Explain the MAC unit in simple words.”</p>
+                      <button class="speak-inline" data-speak="Namaste! I'm ready to study with you. Ask me to explain a concept, describe a diagram, quiz you, or continue your last session." aria-label="Speak welcome message">▶ Listen to welcome</button>
+                    </div>
+                  </article>
+                </div>
+                <div class="tool-trace" id="toolTrace" aria-live="polite"><span class="trace-pulse"></span><span id="toolTraceText">Study tools are ready</span><button id="showToolDetails" class="trace-link">View tool activity</button></div>
+                <div class="suggestion-row" aria-label="Suggested prompts">
+                  <button class="suggestion" data-command="Explain the MAC unit in simple words">Explain MAC unit <span>↗</span></button>
+                  <button class="suggestion" data-command="Describe the DSP architecture block diagram">Describe a diagram <span>↗</span></button>
+                  <button class="suggestion" data-command="Quiz me on FIR filters">Quiz me <span>↗</span></button>
+                </div>
+                <form id="chatForm" class="composer">
+                  <label for="userPrompt" class="visually-hidden">Ask StudySaathi a study question</label>
+                  <textarea id="userPrompt" rows="1" placeholder="Ask a question, or use the microphone…" aria-describedby="composerHelp"></textarea>
+                  <div class="composer-actions">
+                    <div class="composer-left">
+                      <button id="micBtn" type="button" class="round-tool" aria-label="Start voice input" title="Voice input">♩</button>
+                      <button id="speakToggle" type="button" class="sound-toggle" aria-pressed="true"><span aria-hidden="true">◖))</span> Spoken replies <i class="toggle-dot"></i></button>
+                    </div>
+                    <button id="sendBtn" type="submit" class="send-button"><span>Send question</span><span aria-hidden="true">↑</span></button>
+                  </div>
+                  <p id="composerHelp" class="composer-help">Press Enter to send · Shift+Enter for a new line · Microphone support depends on your browser.</p>
+                  <p id="speechStatus" class="speech-status" role="status"></p>
+                </form>
+              </section>
+            </section>
+
+            <aside class="right-column" aria-label="Study session information">
+              <section class="panel guide-panel">
+                <div class="panel-head"><div><span class="panel-kicker">QUICK ACTIONS</span><h2>What would help?</h2></div><span class="sparkle">✳</span></div>
+                <button class="quick-action" data-command="Explain the key ideas in DSP architecture"><span class="quick-icon lilac">✧</span><span><strong>Explain a concept</strong><small>Simple words, clear examples</small></span><b aria-hidden="true">›</b></button>
+                <button class="quick-action" data-command="Describe the DSP architecture block diagram"><span class="quick-icon peach">▧</span><span><strong>Describe a diagram</strong><small>Understand layout and connections</small></span><b aria-hidden="true">›</b></button>
+                <button class="quick-action" data-command="Quiz me on Q15 number format"><span class="quick-icon blue">✓</span><span><strong>Practice a question</strong><small>One question at a time</small></span><b aria-hidden="true">›</b></button>
+                <button class="quick-action" data-command="Continue my last study session"><span class="quick-icon green">↻</span><span><strong>Continue studying</strong><small>Resume saved progress</small></span><b aria-hidden="true">›</b></button>
+                <div class="panel-divider"></div>
+                <div class="safety-note"><span class="shield" aria-hidden="true">✓</span><span><strong>Grounded in study material</strong><small>Answers identify when they use built-in references. Diagram descriptions clearly state when no image analysis occurred.</small></span></div>
+              </section>
+              <section class="panel session-panel">
+                <div class="panel-head"><div><span class="panel-kicker">YOUR SESSION</span><h2>Learning snapshot</h2></div></div>
+                <div class="snapshot-metrics"><div><span id="metricActions">0</span><small>Tool actions</small></div><div><span id="metricCorrect">0</span><small>Correct answers</small></div><div><span id="metricTopics">0</span><small>Topics explored</small></div></div>
+                <div class="last-topic"><span class="last-topic-icon" aria-hidden="true">◷</span><div><small>LAST SAVED</small><strong id="lastSavedText">No session yet</strong></div></div>
+                <button class="wide-quiet-button" data-view="progress">View your progress <span aria-hidden="true">→</span></button>
+              </section>
+            </aside>
+          </div>
+          <footer class="app-footer"><span>STUDYSAATHI VOICE · ACCESSIBILITY-FIRST LEARNING</span><span>Alexa+-style simulation · No Amazon affiliation or live Alexa+ connection claimed</span></footer>
+        </section>
+
+        <section id="notesView" class="view-panel hidden">
+          <div class="page-title"><p class="eyebrow">PERSONALISE YOUR SESSION</p><h1>Your study material</h1><p class="subheading">Paste your own notes or load a plain-text / Markdown file. The study tools use them as context when you ask a question.</p></div>
+          <div class="notes-grid">
+            <section class="panel notes-editor"><div class="panel-head"><div><span class="panel-kicker">YOUR NOTES</span><h2>Bring your materials</h2></div><span class="note-type">TEXT / MARKDOWN</span></div>
+              <label for="notesTitle" class="field-label">Material title</label><input id="notesTitle" class="field-input" value="My ECE notes" maxlength="90">
+              <label for="notesContent" class="field-label">Notes text</label><textarea id="notesContent" class="notes-textarea" rows="14" maxlength="12000" placeholder="Paste text from your class notes here…"></textarea>
+              <div class="notes-actions"><label class="file-button" for="notesFile">Load .txt / .md file</label><input id="notesFile" type="file" accept=".txt,.md,text/plain,text/markdown" class="visually-hidden"><button id="saveNotesBtn" class="primary-button">Use these notes <span>→</span></button></div>
+              <p id="notesStatus" class="muted-text" role="status">Your working notes stay in this browser until you send a study request. Study progress saves the topic and mastery only.</p>
+            </section>
+            <aside class="panel how-notes"><span class="big-note-icon">✦</span><h2>Made for your workflow</h2><ul><li>Paste text from lecture notes or textbooks you are allowed to use.</li><li>Ask for a concept explanation grounded in the material you provide.</li><li>Ask for an accessible, sequential description of a diagram.</li><li>Progress tracking stores topic, section and mastery—not the full notes.</li></ul><div class="notice-small"><strong>Current prototype limitation</strong><p>PDF file upload and automated OCR are not implemented in this version. Copy text from an accessible PDF or use a .txt / .md file.</p></div></aside>
+          </div>
+        </section>
+
+        <section id="progressView" class="view-panel hidden">
+          <div class="page-title"><p class="eyebrow">YOUR LEARNING JOURNEY</p><h1>Progress you can return to</h1><p class="subheading">Your last topic and self-reported mastery are stored so your next session can pick up from there.</p></div>
+          <div class="progress-page-grid"><section class="panel progress-detail"><div class="panel-head"><div><span class="panel-kicker">SAVED LEARNING STATE</span><h2>Your study memory</h2></div><button id="refreshProgressBtn" class="text-button">Refresh ↻</button></div><div id="savedProgressContent" class="saved-progress-content"><div class="empty-state"><span>◷</span><strong>Nothing saved yet</strong><p>Explain a concept, finish a quiz, or save a learning point to create your first progress record.</p></div></div><button id="continueProgressBtn" class="primary-button">Continue studying <span>→</span></button></section><aside class="panel progress-principles"><span class="panel-kicker">CONTROL STAYS WITH YOU</span><h2>Progress is a helper, not a scorecard.</h2><p>Mastery is a learning estimate based on quiz interactions, not an official grade. You can revisit a topic as often as you need.</p><div class="principle-row"><span>01</span><div><strong>Small steps count</strong><small>Review a single concept or work through a short quiz.</small></div></div><div class="principle-row"><span>02</span><div><strong>Progress is persistent</strong><small>Your latest topic and progress can be loaded in a new session.</small></div></div><div class="principle-row"><span>03</span><div><strong>Private by default</strong><small>No student profile or academic record is needed for the demo.</small></div></div></aside></div>
+        </section>
+
+        <section id="toolsView" class="view-panel hidden">
+          <div class="page-title"><p class="eyebrow">UNDER THE HOOD</p><h1>Real tools. Visible actions.</h1><p class="subheading">StudySaathi's web interface is an MCP client. It sends JSON-RPC requests to a hosted Streamable HTTP endpoint and displays real tool results.</p></div>
+          <div class="tools-status-banner"><span class="status-orb"></span><div><strong id="toolsServerState">Checking MCP server…</strong><p id="toolsServerInfo">Protocol discovery and tool listing will appear here.</p></div><button id="refreshToolsBtn" class="secondary-button">Check connection ↻</button></div>
+          <div id="toolsList" class="tool-cards"></div>
+          <section class="panel raw-log-panel"><div class="panel-head"><div><span class="panel-kicker">AUDITABLE INTERACTION</span><h2>Recent MCP call trace</h2></div><button id="clearTraceBtn" class="text-button">Clear trace</button></div><div id="rawToolLog" class="raw-log"><p class="muted-text">Tool requests appear here as you use the study companion.</p></div></section>
+          <p class="disclaimer">This is a StudySaathi-built Alexa+-style simulation for the hackathon. It is not the private Alexa+ Add-on toolkit, does not connect to an Echo device, and does not claim to be an Amazon product.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
