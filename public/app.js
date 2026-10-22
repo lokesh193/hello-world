@@ -11,7 +11,8 @@
     start_quiz:{glyph:"?",label:"Start a quiz"},
     check_quiz_answer:{glyph:"✓",label:"Check quiz answer"},
     save_progress:{glyph:"◷",label:"Save progress"},
-    get_progress:{glyph:"↻",label:"Get saved progress"}
+    get_progress:{glyph:"↻",label:"Get saved progress"},
+    run_guided_study_cycle:{glyph:"⇄",label:"Guided study cycle"}
   };
   const state = {
     reqId:1, initialized:false, initialising:null, toolNames:[], trace:[],
@@ -148,7 +149,7 @@
   }
   function renderToolCards(tools) {
     const box = $("#toolsList");
-    const icons = {search_study_material:"⌕",explain_concept:"✧",describe_diagram:"▧",start_quiz:"?",check_quiz_answer:"✓",save_progress:"◷",get_progress:"↻"};
+    const icons = {search_study_material:"⌕",explain_concept:"✧",describe_diagram:"▧",start_quiz:"?",check_quiz_answer:"✓",save_progress:"◷",get_progress:"↻",run_guided_study_cycle:"⇄"};
     box.innerHTML = tools.map(tool=>'<article class="tool-card"><div class="tool-card-head"><span class="tool-glyph">'+escapeHTML(icons[tool.name]||"◇")+'</span><h3>'+escapeHTML(tool.name)+'</h3></div><p>'+escapeHTML(tool.description)+'</p><code>tools/call · '+escapeHTML(tool.name)+'</code><button type="button" class="tool-run" data-tool="'+escapeHTML(tool.name)+'">Run sample call</button></article>').join("");
     $$(".tool-run",box).forEach(btn=>btn.addEventListener("click",async()=>{
       const name=btn.dataset.tool;
@@ -159,7 +160,8 @@
         start_quiz:{topic:state.currentTopic,question_index:0},
         check_quiz_answer:{topic:"DSP architecture",question_index:0,answer_index:0},
         save_progress:{learner_key:state.learnerKey,topic:state.currentTopic,section:"Sample tool call",mastery:state.mastery,actions_count:state.actions+1,correct_answers:state.correct,topics_explored:[...state.topics]},
-        get_progress:{learner_key:state.learnerKey}
+        get_progress:{learner_key:state.learnerKey},
+        run_guided_study_cycle:{topic:state.currentTopic,level:"simple",question_index:0}
       }[name];
       btn.disabled=true; btn.textContent="Calling MCP…";
       try { const result=await callTool(name,args); addAssistant("MCP tool result for "+name, JSON.stringify(result,null,2)); }
@@ -256,6 +258,7 @@
     if(/harvard|architecture|processor|program counter|dsp block/.test(low)) return "DSP architecture";
     return state.currentTopic;
   }
+  function looksLikeCycle(text) { return /\b(guided study|study cycle|teach me then quiz|explain then quiz|full study session)\b/i.test(text); }
   function looksLikeQuiz(text) { return /\b(quiz|test me|ask me a question|practice question|revise with questions)\b/i.test(text); }
   function looksLikeDiagram(text) { return /\b(diagram|block diagram|flow diagram|describe the figure|describe figure|describe the schematic)\b/i.test(text); }
   function looksLikeContinue(text) { return /\b(continue|resume|where i left|last session|pick up)\b/i.test(text); }
@@ -283,10 +286,50 @@
         await explain(prompt);return;
       } catch(e) { addAssistant("PROGRESS LOOKUP", "I couldn't retrieve saved progress from the study server. We can still continue using this browser's saved state. "+e.message,{speak:false});await explain(prompt);return; }
     }
+    if(looksLikeCycle(prompt)) { await runGuidedCycle();return; }
     if(looksLikeQuiz(prompt)) { await startQuiz();return; }
     if(looksLikeDiagram(prompt)) { await describeDiagram(prompt);return; }
     if(looksLikeSearch(prompt)) { await searchMaterial(prompt);return; }
     await explain(prompt);
+  }
+  async function runGuidedCycle() {
+    try {
+      const noteContext = state.notes.trim() ? state.notes.slice(0,12000) : undefined;
+      const searchArgs = {query:state.currentTopic};
+      if (noteContext) searchArgs.student_notes = noteContext;
+      const search = await callTool("search_study_material", searchArgs);
+
+      const explainArgs = {topic:state.currentTopic,level:"simple"};
+      if (noteContext) explainArgs.student_notes = noteContext;
+      const explanation = await callTool("explain_concept", explainArgs);
+
+      const quiz = await callTool("start_quiz",{topic:state.currentTopic,question_index:0});
+      state.activeQuiz = {topic:quiz.topic||state.currentTopic,question_index:quiz.question_index||0};
+      const matches = Array.isArray(search.matches) ? search.matches : [];
+      const matchLine = matches.length
+        ? matches.map(m=>m.title+" ("+m.section+")").join(", ")
+        : "No close built-in match; using the selected topic's reference template.";
+      const noteLine = noteContext
+        ? "\nYour notes were passed with this request, but this prototype shows a separate excerpt rather than claiming a generated synthesis of arbitrary notes."
+        : "";
+      const answer = [
+        "STEP 1 · SEARCH",
+        "Searched the built-in ECE study pack. Match: "+matchLine+".",
+        "Source: "+(search.source||"built-in reference pack")+".",
+        "STEP 2 · EXPLAIN",
+        explanation.explanation||"No explanation was returned.",
+        noteLine,
+        "STEP 3 · PRACTISE",
+        quiz.question||"Question unavailable.",
+        ...(quiz.options||[]).map((option,index)=>String.fromCharCode(65+index)+". "+option),
+        "Choose an option below. Your answer will be checked, then your progress will be saved."
+      ].filter(Boolean).join("\n\n");
+      addAssistant("GUIDED STUDY CYCLE",answer,{options:quiz.options||[],speak:false});
+      if(state.voiceOn) speak("Guided study cycle for "+state.currentTopic+". Step one, search the built-in study pack. "+(search.matches?.[0]?.excerpt||"No close match was found.")+" Step two, explanation. "+(explanation.explanation||"No explanation returned.")+" Step three, answer this quiz question: "+(quiz.question||"")+" "+(quiz.options||[]).map((o,i)=>String.fromCharCode(65+i)+". "+o).join(". "));
+      await persistProgress("Guided study cycle");
+    } catch(e) {
+      addAssistant("GUIDED STUDY CYCLE ERROR","The multi-step cycle stopped before completion: "+e.message+". You can retry or run an individual study action.",{speak:false});
+    }
   }
   async function explain(prompt) {
     const level=/\b(exam|10 marks|10-mark|long answer)\b/i.test(prompt)?"exam":/\b(detailed|in depth|deeply)\b/i.test(prompt)?"detailed":"simple";
