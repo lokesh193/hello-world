@@ -10,20 +10,20 @@
 **Narration:**  
 "Many learning tools are built around reading and navigating dense screens. StudySaathi Voice is a voice-first study companion designed for blind and low-vision college students. It helps them learn through spoken explanations, guided practice, and resumable progress."
 
-## 0:15–0:40 — Ask for an explanation
-**Action:** Click **Explain MAC unit** and wait for the answer. Then click **Listen to answer** if speech is supported.
+## 0:15–0:40 — Guided study cycle
+**Action:** Click **Guided study cycle** and wait until all three steps appear: search, explanation, and a quiz question. If speech is supported, let the spoken version of the explanation begin.
 
 **Narration:**  
-"The student can ask a question in natural language or choose a quick action. Here, the app routes the request to the explain_concept MCP tool and presents a concise explanation. Browser speech features are used where the browser supports them."
+"One student request starts a small learning workflow. StudySaathi searches its ECE study pack, explains the selected concept, and prepares a short quiz. These are real MCP calls, not a prerecorded chatbot answer."
 
 ## 0:40–1:10 — Show that MCP is real
 **Action:** Open **MCP tools**. Point out protocol version 2025-11-25, the registered tool list, and the recent tool-call trace.
 
 **Narration:**  
-"This is not only a mock chatbot. The web client sends JSON-RPC requests over HTTP to the StudySaathi MCP endpoint. The source includes tool discovery and actual tool calls. The native tool catalog includes material search, concept explanation, diagram narration, quiz generation and checking, and progress persistence."
+"This is not only a mock chatbot. The web client sends JSON-RPC requests over HTTP to the StudySaathi MCP endpoint. The source includes tool discovery and actual tool calls. The tool catalog includes material search, concept explanation, diagram narration, quiz generation and checking, progress persistence, and a composite guided-study tool."
 
 ## 1:10–1:40 — Quiz and feedback
-**Action:** Return to **Study session**, click **Quiz me**, choose an answer, and show the correctness explanation.
+**Action:** Return to **Study session**, choose an option from the quiz already shown by Guided Study Cycle, and show the correctness explanation.
 
 **Narration:**  
 "StudySaathi supports a small ECE practice bank. The answer is checked against a deterministic key, and the student receives immediate feedback. This is a transparent baseline, not a claim of a large general-purpose AI model."
