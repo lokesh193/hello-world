@@ -7,7 +7,7 @@
 **Alexa+ — simulated experience route.** This submission demonstrates an Alexa+-style experience in a web app and includes the simulation's source code. It does not claim an actual Alexa+ integration or Echo-device connection.
 
 ## One-line summary
-An accessibility-first, voice-enabled study companion for blind and low-vision college students, with MCP tools for ECE concept explanations, study-pack search, sequential diagram narration, guided quizzes, and anonymous progress tracking.
+An accessibility-first, voice-enabled study companion for blind and low-vision college students, with MCP tools for ECE concept explanations, study-pack search, sequential diagram narration, guided quizzes, and anonymous progress tracking. Its Guided Study Cycle chains search, explanation and quiz generation before saving progress.
 
 ## Why it matters
 Students who rely on spoken interfaces can face friction when study workflows require reading dense material, interpreting block diagrams, or remembering where they left off. StudySaathi combines speech output with simpler explanations, quiz feedback and resumable learning state in one interface.
@@ -45,7 +45,7 @@ Do not claim the AWS Builder mini challenge: this version does not make a docume
 
 
 ## What was built during the submission window
-During this hackathon build, the project was implemented and deployed as a working web-based simulated Alexa+ experience. The work includes the accessible study interface, a browser-facing Streamable HTTP MCP endpoint, native MCP tool definitions, ECE study-reference data, quiz scoring, anonymous learning-progress persistence, source and run documentation, and a timed demo plan. It does not claim an existing Alexa+ integration or unsupported vision capability.
+During this hackathon build, the project was implemented and deployed as a working web-based simulated Alexa+ experience. The work includes the accessible study interface, a browser-facing Streamable HTTP MCP endpoint, native MCP tool definitions, ECE study-reference data, quiz scoring, anonymous learning-progress persistence, a guided multi-step search–explain–quiz workflow, source and run documentation, and a timed demo plan. It does not claim an existing Alexa+ integration or unsupported vision capability.
 
 ## Tool-by-tool product feedback
 
